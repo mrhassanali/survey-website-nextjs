@@ -9,6 +9,7 @@ import { Button } from "@/components/Atoms/Button";
 import SignInWithGoogle from "@/components/Atoms/Button/SignInWithGoogle";
 import { Formik, Form } from "formik";
 import { YupValidation } from "./YupValidation";
+import { InputFields } from "@/components/Atoms/InputFields";
 
 interface LoginForm {
   email: string;
@@ -66,50 +67,47 @@ export default function LoginPage() {
                   const { email, password } = props.values;
                   return (
                     <Form className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={email}
-                          onChange={props.handleChange}
-                          onAbort={props.handleBlur}
-                          placeholder="Enter your email"
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                          autoComplete="one"
-                        />
-                      </div>
+                      {/* Email Field */}
+                      <InputFields
+                        type="email"
+                        label="Email Address"
+                        name="email"
+                        value={email}
+                        id="email"
+                        error={props.errors.email}
+                        helperText={props.errors.email}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        placeholder="johndoe@example.com"
+                        autoComplete="one"
+                      />
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Password
-                        </label>
-                        <div className="relative">
-                          <input
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={props.handleChange}
-                            placeholder="Enter your password"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                            auto-complete="on"
-                          />
-
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-8"
-                          >
-                            {showPassword ? (
-                              <EyeSlashIcon className="text-black" />
-                            ) : (
-                              <EyeIcon className="text-black" />
-                            )}
-                          </button>
-                        </div>
-                      </div>
+                      <InputFields
+                        type={showPassword ? "text" : "password"}
+                        label="Password"
+                        name="password"
+                        value={password}
+                        id="password"
+                        error={props.errors.password}
+                        helperText={props.errors.password}
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        placeholder="Enter your password"
+                        autoComplete="on"
+                        endIcon={
+                          showPassword ? (
+                            <EyeSlashIcon
+                              className="text-black"
+                              onClick={() => setShowPassword(!showPassword)}
+                            />
+                          ) : (
+                            <EyeIcon
+                              className="text-black"
+                              onClick={() => setShowPassword(!showPassword)}
+                            />
+                          )
+                        }
+                      />
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
