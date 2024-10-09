@@ -16,6 +16,9 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
 import { InputFields } from "@/components/Atoms/InputFields";
+import { USER_API_ROUTE } from "@/app/lib/constants/API_Route";
+import { useSnackbar } from "notistack";
+import { useRouter } from "next/navigation";
 
 interface SignUpForm {
   fullName: string;
@@ -29,6 +32,8 @@ interface SignUpForm {
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const initialValue: SignUpForm = {
     fullName: "",
@@ -39,9 +44,29 @@ export default function SignupPage() {
     termAndCondition: false,
   };
 
-  const handleSubmit = (values: SignUpForm) => {
-    console.log(values);
-    alert(JSON.stringify(values));
+  const handleSubmit = async (values: SignUpForm) => {
+    const response = await fetch(USER_API_ROUTE.SIGNUP_POST, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        country: "pakistan",
+      }),
+    });
+
+    if (response.ok) {
+      enqueueSnackbar("Account created successfully", {
+        variant: "success",
+      });
+      router.push(LOGIN);
+    } else {
+      const ResponseError = await response.json();
+      enqueueSnackbar(ResponseError.message, {
+        variant: "error",
+      });
+    }
   };
 
   return (

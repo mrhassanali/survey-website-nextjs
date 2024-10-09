@@ -10,6 +10,8 @@ import SignInWithGoogle from "@/components/Atoms/Button/SignInWithGoogle";
 import { Formik, Form } from "formik";
 import { YupValidation } from "./YupValidation";
 import { InputFields } from "@/components/Atoms/InputFields";
+import { signIn } from "next-auth/react";
+import { useSnackbar } from "notistack";
 
 interface LoginForm {
   email: string;
@@ -18,15 +20,25 @@ interface LoginForm {
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const initialValue: LoginForm = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = (values: LoginForm) => {
-    console.log(values);
-    alert(JSON.stringify(values));
+  const handleSubmit = async (values: LoginForm) => {
+    const signInResponse = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+    });
+    if (signInResponse?.ok) {
+      enqueueSnackbar("Successfully logged in", { variant: "success" });
+    } else {
+      enqueueSnackbar("Invalid email or password", { variant: "error" });
+    }
+    console.log(signInResponse);
   };
 
   return (
