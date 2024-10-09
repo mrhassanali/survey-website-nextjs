@@ -5,6 +5,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+
+  --bg-sidebar: rgb(17 24 39 / var(--tw-bg-opacity));
+  --bg-sidebar-hover: rgb(31 41 55 / var(--tw-bg-opacity));
+  --text-sidebar: rgb(156 163 175 / var(--tw-text-opacity));
+  --text-sidebar-hover: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 @media (prefers-color-scheme: dark) {

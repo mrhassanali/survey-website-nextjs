@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "bg-sidebar": "var(--bg-sidebar)",
+        "sidebar-hover": "var(--bg-sidebar-hover)",
+        "sidebar-text": "var(--text-sidebar)",
+        "sidebar-text-hover": "var(--text-sidebar-hover)",
       },
     },
   },
