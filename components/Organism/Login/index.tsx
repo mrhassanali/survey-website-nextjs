@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { REGISTER } from "@/app/lib/constants/Route";
+import { DASHBOARD, REGISTER } from "@/app/lib/constants/Route";
 
 import LoginAvatar from "@/assets/image/login-avatar.png";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/16/solid";
@@ -12,6 +12,7 @@ import { YupValidation } from "./YupValidation";
 import { InputFields } from "@/components/Atoms/InputFields";
 import { signIn } from "next-auth/react";
 import { useSnackbar } from "notistack";
+import { useRouter } from "next/navigation";
 
 interface LoginForm {
   email: string;
@@ -21,6 +22,7 @@ interface LoginForm {
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const initialValue: LoginForm = {
     email: "",
@@ -28,17 +30,19 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (values: LoginForm) => {
-    const signInResponse = await signIn("credentials", {
-      redirect: false,
+    await signIn("credentials", {
+      redirect: true,
       email: values.email,
       password: values.password,
+      callbackUrl: DASHBOARD,
     });
-    if (signInResponse?.ok) {
-      enqueueSnackbar("Successfully logged in", { variant: "success" });
-    } else {
-      enqueueSnackbar("Invalid email or password", { variant: "error" });
-    }
-    console.log(signInResponse);
+    // if (signInResponse?.ok) {
+    //   router.push(DASHBOARD);
+    //   enqueueSnackbar("Successfully logged in", { variant: "success" });
+    // } else {
+    //   enqueueSnackbar("Invalid email or password", { variant: "error" });
+    // }
+    // console.log(signInResponse);
   };
 
   return (
