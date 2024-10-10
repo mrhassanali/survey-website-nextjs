@@ -42,6 +42,7 @@ export const variants = cva(
         destructive: [
           "bg-danger-600",
           "text-white",
+          "bg-red-600",
           "border-transparent",
           "hover:bg-danger-500",
           "active:bg-danger-400",
