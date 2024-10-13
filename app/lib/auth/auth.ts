@@ -1,7 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { db } from "./db";
+import { db } from "../db";
 import { compare } from "bcrypt";
 
 export const authOptions: AuthOptions = {
@@ -11,7 +11,7 @@ export const authOptions: AuthOptions = {
   },
   secret: process.env.NEXT_AUTH_SECRET,
   pages: {
-    signIn: "/signin",
+    signIn: "/login",
     signOut: "/signout",
     error: "/auth/error",
     verifyRequest: "/auth/verify-request",
@@ -28,7 +28,8 @@ export const authOptions: AuthOptions = {
         email: { label: "Username", type: "text", placeholder: "Hassan Ali" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
+        // async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -54,7 +55,8 @@ export const authOptions: AuthOptions = {
         return {
           id: existingUser.id.toString(),
           email: existingUser.email,
-          name: existingUser.name,
+          name: existingUser.name || "",
+          isAdmin: existingUser.isAdmin,
         };
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
@@ -78,4 +80,30 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          name: token.name,
+          email: token.email,
+          isAdmin: token.isAdmin,
+        },
+      };
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        };
+      }
+      return token;
+    },
+  },
 };

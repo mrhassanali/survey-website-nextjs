@@ -11,8 +11,8 @@ export const Button = ({
   variant = 'primary',
   size = 'medium',
   fullWidth = false,
-  className,
+  className = '',
   ...props
 }: ButtonProps) => {
-  return <button {...props} className={variants({ variant, size,fullWidth })} />;
+  return <button {...props} className={`${variants({ variant, size, fullWidth })} ${className}`} />;
 };

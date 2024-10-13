@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 import { hash } from "bcrypt";
 
-export async function GET(request: Request) {
+export async function GET() {
   const result = await db.user.findMany();
   return NextResponse.json({ result });
 }
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { fullName, email, phone, country, password } = body;
+    const { fullName, email, phone, password } = body;
 
     //check user email already exist
     const checkUserEmail = await db.user.findUnique({
@@ -49,17 +49,22 @@ export async function POST(request: Request) {
         name: fullName,
         email: email,
         phone: phone,
-        country: country,
+        isAdmin: false,
         password: hashPassword,
+        referralCode: "6MT2N",
       },
     });
 
-    // Remove Password from the response
-    const { password: newUserPassword, ...newUserData } = newUser;
-
     return NextResponse.json(
       {
-        user: newUserData,
+        user: {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          phone: newUser.phone,
+          isAdmin: newUser.isAdmin,
+          referralCode: newUser.referralCode,
+        },
         message: "User created successfully",
       },
       {
@@ -69,7 +74,7 @@ export async function POST(request: Request) {
   } catch (e) {
     // Error handling
     return NextResponse.json(
-      { message: "Something went wrong", error: "An error occurred" },
+      { message: String(e), error: "An error occurred" },
       { status: 500 }
     );
   }

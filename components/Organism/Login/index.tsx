@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { DASHBOARD, REGISTER } from "@/app/lib/constants/Route";
+import { ADMIN, DASHBOARD, REGISTER } from "@/app/lib/constants/Route";
 
 import LoginAvatar from "@/assets/image/login-avatar.png";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/16/solid";
@@ -10,9 +10,10 @@ import SignInWithGoogle from "@/components/Atoms/Button/SignInWithGoogle";
 import { Formik, Form } from "formik";
 import { YupValidation } from "./YupValidation";
 import { InputFields } from "@/components/Atoms/InputFields";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LoginForm {
   email: string;
@@ -30,18 +31,22 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (values: LoginForm) => {
-    await signIn("credentials", {
-      redirect: true,
+    const signInResponse = await signIn("credentials", {
+      redirect: false,
       email: values.email,
       password: values.password,
       callbackUrl: DASHBOARD,
     });
-    // if (signInResponse?.ok) {
-    //   router.push(DASHBOARD);
-    //   enqueueSnackbar("Successfully logged in", { variant: "success" });
-    // } else {
-    //   enqueueSnackbar("Invalid email or password", { variant: "error" });
-    // }
+    if (signInResponse?.ok) {
+      const session = await getSession();
+      if (session) {
+        router.push(session.user.isAdmin ? ADMIN : DASHBOARD);
+
+        enqueueSnackbar("Successfully logged in", { variant: "success" });
+      }
+    } else {
+      enqueueSnackbar("Invalid email or password", { variant: "error" });
+    }
     // console.log(signInResponse);
   };
 
@@ -55,8 +60,8 @@ export default function LoginPage() {
               <h2 className="text-2xl font-bold text-blue-500">Survey</h2>
             </div>
             <div className="flex justify-center items-center">
-              <img
-                src={LoginAvatar.src}
+              <Image
+                src={LoginAvatar}
                 alt="Person with laptop and robot"
                 className="max-w-[80%]"
               />
@@ -158,7 +163,7 @@ export default function LoginPage() {
 
                       <div className="text-center">
                         <span className="text-sm text-gray-600">
-                          Don't have an account?
+                          Don&apos;t have an account?
                           <Link
                             href={REGISTER}
                             className="text-blue-500 hover:underline ml-1"
