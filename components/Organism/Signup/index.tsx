@@ -14,6 +14,8 @@ import {
   AtSymbolIcon,
   PhoneArrowDownLeftIcon,
   LockClosedIcon,
+  EyeSlashIcon,
+  EyeIcon,
 } from "@heroicons/react/24/outline";
 import { InputFields } from "@/components/Atoms/InputFields";
 import { USER_API_ROUTE } from "@/app/lib/constants/API_Route";
@@ -32,7 +34,7 @@ interface SignUpForm {
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
 
   const initialValue: SignUpForm = {
@@ -153,7 +155,7 @@ export default function SignupPage() {
                         onChange={props.handleChange}
                         onBlur={props.handleBlur}
                         placeholder="johndoe@example.com"
-                        autoComplete="one"
+                        autoComplete="email"
                         startIcon={
                           <AtSymbolIcon className="h-5 w-5 text-gray-400" />
                         }
@@ -193,6 +195,19 @@ export default function SignupPage() {
                         startIcon={
                           <LockClosedIcon className="h-5 w-5 text-gray-400" />
                         }
+                        endIcon={
+                          showPassword ? (
+                            <EyeSlashIcon
+                              className="text-black"
+                              onClick={() => setShowPassword(!showPassword)}
+                            />
+                          ) : (
+                            <EyeIcon
+                              className="text-black"
+                              onClick={() => setShowPassword(!showPassword)}
+                            />
+                          )
+                        }
                       />
 
                       {/* Confirm Password Field */}
@@ -210,6 +225,23 @@ export default function SignupPage() {
                         autoComplete="new-password"
                         startIcon={
                           <LockClosedIcon className="h-5 w-5 text-gray-400" />
+                        }
+                        endIcon={
+                          showConfirmPassword ? (
+                            <EyeSlashIcon
+                              className="text-black"
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
+                            />
+                          ) : (
+                            <EyeIcon
+                              className="text-black"
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
+                            />
+                          )
                         }
                       />
 

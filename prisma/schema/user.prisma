@@ -1,0 +1,42 @@
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  name         String
+  phone        String        @unique
+  isAdmin      Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  surveys      Survey[]
+  earnings     Earning?
+  referralCode String        @unique
+  referredBy   User?         @relation("Referrals", fields: [referredById], references: [id])
+  referredById String?
+  referrals    User[]        @relation("Referrals")
+  account      Account?
+  transactions Transaction[]
+
+  genders genders[]
+}
+
+model Earning {
+  id               String @id @default(uuid())
+  user             User   @relation(fields: [userId], references: [id])
+  userId           String @unique
+  totalEarned      Float  @default(0)
+  pendingPayment   Float  @default(0)
+  completedSurveys Int    @default(0)
+  averagePerSurvey Float  @default(0)
+}
+
+model genders {
+  user_id String      @id @unique
+  sex     genders_sex
+  User    User        @relation(fields: [user_id], references: [id])
+}
+
+enum genders_sex {
+  male
+  female
+  unspecified
+}

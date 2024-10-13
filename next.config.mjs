@@ -14,6 +14,17 @@ const nextConfig = {
     });
     return config;
   },
+  images: {
+    domains: ['hassanali.pk'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'hassanali.pk',
+        port: '',
+        pathname: '/account123/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

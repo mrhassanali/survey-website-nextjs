@@ -1,14 +1,9 @@
 import Sidebar from "@/components/Organism/Sidebar";
-import { BellIcon } from "@heroicons/react/24/outline";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../lib/auth";
-import dynamic from "next/dynamic";
+import { authOptions } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
-import { LOGIN } from "../lib/constants/Route";
-const SignOutBtn = dynamic(
-  () => import("@/components/Atoms/Button/SignOutBtn"),
-  { ssr: false }
-);
+import { LOGIN } from "@/app/lib/constants/Route";
+import Image from "next/image";
 
 export default async function DashboardLayout({
   children,
@@ -16,17 +11,16 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  if(session){
-    console.log(session.user);
-  }else{
+  console.log(session);
+  if (!session) {
     redirect(LOGIN);
   }
 
   return (
     <>
-      <div className="min-h-screen flex">
+      <div className="h-[100vh] flex">
         <Sidebar />
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {/* Top Navigation */}
           <div className="h-16 border-b flex items-center justify-between px-4">
             <div className="flex-1 flex items-center">
@@ -45,26 +39,28 @@ export default async function DashboardLayout({
             </div>
 
             <div className="flex items-center space-x-4">
-              <button className="text-gray-400 hover:text-gray-500">
+              {/* <button className="text-gray-400 hover:text-gray-500">
                 <BellIcon className="h-6 w-6" />
-              </button>
-              <SignOutBtn />
+              </button> */}
+              {/* <SignOutBtn /> */}
               <div className="flex items-center">
-                <img
+                <span className="ml-2 text-gray-700">
+                  Hello {session?.user?.name}
+                </span>
+                <Image
                   src="https://hassanali.pk/images/profile/profile.png"
                   alt="User avatar"
-                  className="h-8 w-8 rounded-full"
+                  width={32}
+                  height={32}
+                  className="rounded-full"
                 />
-                <span className="ml-2 text-gray-700">
-                  {session?.user?.name}
-                </span>
               </div>
             </div>
           </div>
 
           {/* Main Content Area */}
           <main className="p-6">
-            <div className="border-2 border-dashed border-gray-200 rounded-lg h-96 flex items-center justify-center text-gray-500">
+            <div className="border-2 border-dashed border-gray-200 rounded-lg  min-h-96 text-gray-500">
               {children}
             </div>
           </main>

@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import {
   HomeIcon,
   UsersIcon,
@@ -7,30 +7,57 @@ import {
   CalendarIcon,
   DocumentIcon,
   ChartBarIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  MagnifyingGlassIcon,
+  // Cog6ToothIcon,
+  // BellIcon,
+  // MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import SignOutBtn from "./SignOutBtn";
+import Link from "next/link";
+import { ADMIN_DASHBOARD, USER_DASHBOARD } from "@/app/lib/constants/Route";
+// import { useSession } from "next-auth/react";
+
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // const {data,status,update} = useSession();
 
   const menuItems = [
-    { name: "Dashboard", icon: HomeIcon },
-    { name: "Team", icon: UsersIcon },
-    { name: "Projects", icon: FolderIcon },
-    { name: "Calendar", icon: CalendarIcon },
-    { name: "Documents", icon: DocumentIcon },
-    { name: "Reports", icon: ChartBarIcon },
+    { name: "Dashboard", icon: HomeIcon, href: USER_DASHBOARD.DASHBOARD },
+    { name: "Paid Surveys", icon: UsersIcon, href: USER_DASHBOARD.PAID_SURVEY },
+    { name: "Earning", icon: FolderIcon, href: USER_DASHBOARD.EARNING },
+    { name: "History", icon: CalendarIcon, href: USER_DASHBOARD.HISTORY },
+    {
+      name: "Referral Program",
+      icon: DocumentIcon,
+      href: USER_DASHBOARD.REFERRAL_PROGRAM,
+    },
+    {
+      name: "Money Withdrawal",
+      icon: ChartBarIcon,
+      href: USER_DASHBOARD.MONEY_WITHDRAWAL,
+    },
+    { name: "FAQs", icon: ChartBarIcon, href: USER_DASHBOARD.FAQS },
   ];
 
-  const teams = [
-    { name: "Heroicons", initial: "H" },
-    { name: "Tailwind Labs", initial: "T" },
-    { name: "Workcation", initial: "W" },
+  const adminMenu = [
+    { name: "Dashboard", icon: HomeIcon, href: ADMIN_DASHBOARD.DASHBOARD },
+    { name: "Users", icon: UsersIcon, href: ADMIN_DASHBOARD.USERS },
+    { name: "Survey", icon: FolderIcon, href: ADMIN_DASHBOARD.SURVEYS },
+    { name: "Payments", icon: CalendarIcon, href: ADMIN_DASHBOARD.PAYMENTS },
+    {
+      name: "Settings",
+      icon: DocumentIcon,
+      href: ADMIN_DASHBOARD.SETTINGS,
+    },
   ];
+
+  // const teams = [
+  //   { name: "Heroicons", initial: "H" },
+  //   { name: "Tailwind Labs", initial: "T" },
+  //   { name: "Workcation", initial: "W" },
+  // ];
 
   return (
     <>
@@ -69,19 +96,19 @@ const Sidebar = () => {
         </div>
 
         <nav className="mt-4">
-          {menuItems.map((item, index) => (
-            <a
+          {(false ? adminMenu : menuItems).map((item, index) => (
+            <Link
               key={index}
-              href="#"
+              href={item.href || "#"}
               className="flex items-center px-4 py-2 text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-hover"
               onClick={() => setIsSidebarOpen(false)}
             >
               <item.icon className="h-5 w-5 mr-3" />
               <span>{item.name}</span>
-            </a>
+            </Link>
           ))}
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <div className="px-4 text-sm font-semibold text-purple-200">
               Your teams
             </div>
@@ -98,17 +125,18 @@ const Sidebar = () => {
                 <span>{team.name}</span>
               </a>
             ))}
-          </div>
+          </div> */}
         </nav>
 
         <div className="absolute bottom-0 w-64 p-4">
-          <a
+          <SignOutBtn />
+          {/* <a
             href="#"
             className="flex items-center text-white hover:bg-purple-700 px-4 py-2"
           >
             <Cog6ToothIcon className="h-5 w-5 mr-3" />
             <span>Settings</span>
-          </a>
+          </a> */}
         </div>
       </div>
 
